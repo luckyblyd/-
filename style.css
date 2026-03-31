@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap');
+
+:root {
+    --bg-color: #000;
+    --text-color: #0f0;
+    --accent-color: #f0f;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'ZCOOL KuaiLe', 'Comic Sans MS', cursive, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+}
+
+
+
+#mahjongBoard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+}
+
+/* Static Slot Positions */
+.kuso-item {
+    position: absolute;
+    transition: opacity 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 5px solid var(--accent-color);
+    border-radius: 12px;
+    box-shadow: 0 0 30px var(--accent-color);
+    overflow: hidden;
+    background: #000;
+    opacity: 0;
+    /* Default to off-screen or small before initialization */
+    transform: translate(-50%, -50%) scale(0.1); 
+}
+
+.kuso-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: kuso-shake 0.3s infinite;
+}
+
+/* Center (Highest z-index per user request) */
+.slot-0 {
+    width: 50vw; height: 50vh;
+    top: 50%; left: 50%;
+    z-index: 50; 
+    border-color: #0f0; 
+    box-shadow: 0 0 40px #0f0;
+}
+.slot-0.active { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+/* Deactivating state targets the item's transform without .active */
+.slot-0:not(.active) { transform: translate(-50%, -50%) scale(0.1); }
+
+/* Top Left */
+.slot-1 {
+    width: 35vw; height: 35vh;
+    top: 25%; left: 25%;
+    z-index: 10;
+}
+.slot-1.active { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+.slot-1:not(.active) { transform: translate(-50%, -50%) scale(0.1); }
+
+/* Top Right */
+.slot-2 {
+    width: 35vw; height: 35vh;
+    top: 25%; left: 75%;
+    z-index: 10;
+}
+.slot-2.active { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+.slot-2:not(.active) { transform: translate(-50%, -50%) scale(0.1); }
+
+/* Bottom Left */
+.slot-3 {
+    width: 35vw; height: 35vh;
+    top: 75%; left: 25%;
+    z-index: 10;
+}
+.slot-3.active { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+.slot-3:not(.active) { transform: translate(-50%, -50%) scale(0.1); }
+
+/* Bottom Right */
+.slot-4 {
+    width: 35vw; height: 35vh;
+    top: 75%; left: 75%;
+    z-index: 10;
+}
+.slot-4.active { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+.slot-4:not(.active) { transform: translate(-50%, -50%) scale(0.1); }
+
+
+@keyframes kuso-shake {
+    0% { transform: translate(2px, 1px) rotate(0deg); filter: hue-rotate(0deg); }
+    33% { transform: translate(-3px, 2px) rotate(2deg); filter: hue-rotate(45deg); }
+    66% { transform: translate(1px, -2px) rotate(-2deg); filter: hue-rotate(90deg); }
+    100% { transform: translate(-1px, -1px) rotate(0deg); filter: hue-rotate(0deg); }
+}
+
+body.playing {
+    animation: raveBackground 0.2s infinite;
+}
+
+@keyframes raveBackground {
+    0% { background-color: #111; }
+    33% { background-color: #300; }
+    66% { background-color: #030; }
+    100% { background-color: #003; }
+}
+
+#pianoContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 30vh;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding-bottom: 2vh;
+}
+
+.piano {
+    display: flex;
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 95vw;
+    max-width: 800px;
+}
+
+.piano li {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    border-radius: 0 0 10px 10px;
+    transition: background 0.1s, transform 0.1s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.piano .white {
+    flex: 1;
+    background: #f0f0f0;
+    z-index: 1;
+    position: relative;
+    border: 1px solid #ccc;
+    border-top: none;
+    box-shadow: inset 0 -4px 5px rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.piano .white.active, .piano .white:active {
+    background: #ddd;
+    box-shadow: inset 0 -2px 2px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.5);
+    transform: translateY(2px);
+}
+
+.piano .black {
+    width: 8.5%;
+    height: 65%;
+    background: #222;
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    margin-left: -4.25%;
+    border: 1px solid #000;
+    border-top: none;
+    box-shadow: inset 0 -4px 5px rgba(255,255,255,0.2), 0 4px 6px rgba(0,0,0,0.8);
+}
+
+.piano .black.active, .piano .black:active {
+    background: #111;
+    box-shadow: inset 0 -2px 2px rgba(255,255,255,0.2), 0 2px 3px rgba(0,0,0,0.8);
+    transform: translateY(2px);
+}
+
+.piano li:nth-child(2) { left: 14.28%; }
+.piano li:nth-child(4) { left: 28.57%; }
+.piano li:nth-child(7) { left: 57.14%; }
+.piano li:nth-child(9) { left: 71.42%; }
+.piano li:nth-child(11) { left: 85.71%; }
+
+/* Add numbers on keys */
+.piano .white::after, .piano .black::after {
+    content: attr(data-note);
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    pointer-events: none;
+}
+.piano .white::after { color: #333; font-size: 1.2rem; }
+.piano .black::after { color: #ccc; font-size: 1rem; }
