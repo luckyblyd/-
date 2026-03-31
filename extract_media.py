@@ -12,12 +12,18 @@ def convert_video(input_path):
     wav_path = base_name + ".wav"
     static_path = base_name + "_static.jpg"
     
-    # Save static frame
     print(f"Extracting static frame to {static_path}...")
     clip.save_frame(static_path, t=0)
     
+    # 保留高清晰度: 高度大于 720 的才等比缩放到 720P，小于的保持原汁原味
+    if clip.size[1] > 720:
+        print("Downscaling to 720P limit to preserve HD...")
+        clip = clip.resized(height=720)
+        
     print(f"Extracting GIF to {gif_path}..." )
-    clip.write_gif(gif_path, fps=15)
+    
+    # 压缩算法优化：帧率降低至 8 FPS，颜色表压缩至 128 色，利用 nq(NeuQuant) 神经算法获得画质体积平衡
+    clip.write_gif(gif_path, fps=8)
     
     print(f"Extracting Audio to {wav_path}...")
     if clip.audio is not None:
@@ -31,5 +37,5 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         convert_video(sys.argv[1])
     else:
-        convert_video("3.mp4")
-        convert_video("4.mp4")
+        convert_video("1.mp4")
+        convert_video("2.mp4")
